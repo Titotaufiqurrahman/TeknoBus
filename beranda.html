@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeknoBus - Pemesanan Tiket Bus Online</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="icon-x1"></i>
+                    TeknoBus
+                </div>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="#home">
+                            <i data-lucide="home" class="icon-sm"></i>
+                            Beranda
+                        </a></li>
+                        <li><a href="#booking">
+                            <i data-lucide="ticket" class="icon-sm"></i>
+                            Pemesanan
+                        </a></li>
+                        <li><a href="#about">
+                            <i data-lucide="info" class="icon-sm"></i>
+                            Tentang
+                        </a></li>
+                        <li><a href="#contact">
+                            <i data-lucide="phone" class="icon-sm"></i>
+                            Kontak
+                        </a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Pesan Tiket Bus Online</h1>
+            <p>Mudah, Cepat, dan Terpercaya untuk Perjalanan Anda</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="step-indicator">
+            <div class="step active" id="step1">
+                <i data-lucide="search" class="icon-sm"></i>
+                1. Cari Bus
+            </div>
+            <div class="step" id="step2">
+                <i data-lucide="bus" class="icon-sm"></i>
+                2. Pilih Bus
+            </div>
+            <div class="step" id="step3">
+                <i data-lucide="armchair" class="icon-sm"></i>
+                3. Pilih Kursi
+            </div>
+            <div class="step" id="step4">
+                <i data-lucide="users" class="icon-sm"></i>
+                4. Data Penumpang
+            </div>
+            <div class="step" id="step5">
+                <i data-lucide="credit-card" class="icon-sm"></i>
+                5. Pembayaran
+            </div>
+            <div class="step" id="step6">
+                <i data-lucide="check-circle" class="icon-sm"></i>
+                6. Konfirmasi
+            </div>
+        </div>
+
+        <form class="search-form" id="searchForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="departure">
+                        <i data-lucide="map-pin" class="icon-sm"></i>
+                        Kota Asal
+                    </label>
+                    <select id="departure" required>
+                        <option value="">Pilih Kota Asal</option>
+                        <option value="klaten">Klaten</option>
+                        <option value="jakarta">Jakarta</option>
+                        <option value="bandung">Bandung</option>
+                        <option value="surabaya">Surabaya</option>
+                        <option value="yogyakarta">Yogyakarta</option>
+                        <option value="semarang">Semarang</option>
+                        <option value="malang">Malang</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="destination">
+                        <i data-lucide="navigation" class="icon-sm"></i>
+                        Kota Tujuan
+                    </label>
+                    <select id="destination" required>
+                        <option value="">Pilih Kota Tujuan</option>
+                        <option value="jakarta">Jakarta</option>
+                        <option value="bandung">Bandung</option>
+                        <option value="surabaya">Surabaya</option>
+                        <option value="yogyakarta">Yogyakarta</option>
+                        <option value="semarang">Semarang</option>
+                        <option value="malang">Malang</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">
+                        <i data-lucide="calendar" class="icon-sm"></i>
+                        Tanggal Keberangkatan
+                    </label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="passengers">
+                        <i data-lucide="users" class="icon-sm"></i>
+                        Jumlah Penumpang
+                    </label>
+                    <select id="passengers" required>
+                        <option value="1">1 Penumpang</option>
+                        <option value="2">2 Penumpang</option>
+                        <option value="3">3 Penumpang</option>
+                        <option value="4">4 Penumpang</option>
+                        <option value="5">5 Penumpang</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-full">
+                <i data-lucide="search" class="icon"></i>
+                Cari Bus Tersedia
+            </button>
+        </form>
+
+        <section class="results-section" id="resultsSection">
+            <h2>
+                <i class="icon-lg"></i>
+                Bus Tersedia
+            </h2>
+            <div id="busResults"></div>
+        </section>
+
+        <section class="seat-selection-section" id="seatSelectionSection">
+            <div class="seat-selection-header">
+                <h2>
+                    <i data-lucide="armchair" class="icon-lg"></i>
+                    Pilih Kursi Anda
+                </h2>
+                <div id="selectedBusInfo"></div>
+            </div>
+            
+            <div class="bus-layout">
+                <div class="driver-area">
+                    <i data-lucide="steering-wheel" class="icon"></i>
+                    AREA SUPIR
+                </div>
+                
+                <div class="seats-grid" id="seatsGrid">
+                </div>
+                
+                <div class="seat-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: white; border-color: var(--gray-300);"></div>
+                        <span>Tersedia</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--success-color); border-color: var(--success-color);"></div>
+                        <span>Dipilih</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--danger-color); border-color: var(--danger-color);"></div>
+                        <span>Terisi</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--warning-color); border-color: var(--warning-color);"></div>
+                        <span>Dipesan</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="seat-info">
+                <div class="selected-seats-display" id="selectedSeatsDisplay">
+                    Silakan pilih kursi sesuai jumlah penumpang
+                </div>
+                <div class="seat-price-info" id="seatPriceInfo">
+                </div>
+                <div>
+                    <button class="btn btn-secondary" onclick="goBackToBusSelection()">
+                        <i data-lucide="arrow-left" class="icon-sm"></i>
+                        Kembali
+                    </button>
+                    <button class="btn" id="proceedToBookingBtn" onclick="proceedToBooking()" disabled>
+                        Lanjut ke Data Penumpang
+                        <i data-lucide="arrow-right" class="icon-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="booking-section" id="bookingSection">
+            <h2>
+                <i data-lucide="clipboard-list" class="icon-lg"></i>
+                Detail Pemesanan
+            </h2>
+            <div id="finalBusInfo"></div>
+            <form id="bookingForm">
+                <h3>
+                    <i data-lucide="users" class="icon"></i>
+                    Data Penumpang
+                </h3>
+                <div class="passenger-form" id="passengerForm">
+                </div>
+                <div class="form-group">
+                    <label for="phone">
+                        <i data-lucide="phone" class="icon-sm"></i>
+                        Nomor Telepon
+                    </label>
+                    <input type="tel" id="phone" required placeholder="08xxxxxxxxxx">
+                </div>
+                <div class="form-group">
+                    <label for="email">
+                        <i data-lucide="mail" class="icon-sm"></i>
+                        Email
+                    </label>
+                    <input type="email" id="email" required placeholder="email@example.com">
+                </div>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button type="button" class="btn btn-secondary" onclick="goBackToSeatSelection()">
+                        <i data-lucide="arrow-left" class="icon-sm"></i>
+                        Kembali
+                    </button>
+                    <button type="submit" class="btn">
+                        Lanjut ke Pembayaran
+                        <i data-lucide="arrow-right" class="icon-sm"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="payment-section" id="paymentSection">
+            <h2>
+                <i data-lucide="credit-card" class="icon-lg"></i>
+                Pembayaran
+            </h2>
+            
+            <div class="payment-summary" id="paymentSummary">
+                <h3>
+                    <i data-lucide="receipt" class="icon"></i>
+                    Ringkasan Pembayaran
+                </h3>
+                <div id="paymentSummaryContent"></div>
+            </div>
+
+            <h3>
+                <i data-lucide="wallet" class="icon"></i>
+                Pilih Metode Pembayaran
+            </h3>
+            <div class="payment-methods">
+                <div class="payment-method" data-method="qris">
+                    <i data-lucide="qr-code" class="payment-method-icon"></i>
+                    <div class="payment-method-name">QRIS</div>
+                    <div class="payment-method-desc">Scan QR Code untuk bayar</div>
+                </div>
+                <div class="payment-method" data-method="credit-card">
+                    <i data-lucide="credit-card" class="payment-method-icon"></i>
+                    <div class="payment-method-name">Kartu Kredit/Debit</div>
+                    <div class="payment-method-desc">Visa, Mastercard, JCB</div>
+                </div>
+                <div class="payment-method" data-method="bank-transfer">
+                    <i data-lucide="building-2" class="payment-method-icon"></i>
+                    <div class="payment-method-name">Transfer Bank</div>
+                    <div class="payment-method-desc">BCA, Mandiri, BRI, BNI</div>
+                </div>
+                <div class="payment-method" data-method="ewallet">
+                    <i data-lucide="smartphone" class="payment-method-icon"></i>
+                    <div class="payment-method-name">E-Wallet</div>
+                    <div class="payment-method-desc">GoPay, OVO, DANA, ShopeePay</div>
+                </div>
+            </div>
+
+            <!-- QRIS Form -->
+            <div class="payment-form" id="qrisForm">
+                <h4>
+                    <i data-lucide="qr-code" class="icon"></i>
+                    Pembayaran QRIS
+                </h4>
+                <div class="qris-container">
+                    <div class="qris-amount" id="qrisAmount">
+                        <i data-lucide="banknote" class="icon"></i>
+                        Total Pembayaran: Rp 0
+                    </div>
+                    
+                    <div class="qris-code">
+                        <img src="/placeholder.svg?height=250&width=250&text=QR+Code+QRIS" alt="QRIS QR Code" id="qrisImage">
+                    </div>
+                    
+                    <div class="qris-timer" id="qrisTimer">
+                        <i data-lucide="clock" class="icon-sm"></i>
+                        Waktu tersisa: <span id="timerDisplay">15:00</span>
+                    </div>
+                    
+                    <div class="qris-instructions">
+                        <h5>
+                            <i data-lucide="info" class="icon-sm"></i>
+                            Cara Pembayaran QRIS:
+                        </h5>
+                        <ol>
+                            <li>Buka aplikasi mobile banking atau e-wallet Anda</li>
+                            <li>Pilih menu "Scan QR" atau "QRIS"</li>
+                            <li>Arahkan kamera ke QR Code di atas</li>
+                            <li>Pastikan nominal pembayaran sesuai</li>
+                            <li>Konfirmasi pembayaran dengan PIN/biometrik</li>
+                            <li>Simpan bukti pembayaran</li>
+                            <li>Pembayaran akan otomatis terverifikasi</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credit Card Form -->
+            <div class="payment-form" id="creditcardForm">
+                <h4>
+                    <i data-lucide="credit-card" class="icon"></i>
+                    Informasi Kartu Kredit/Debit
+                </h4>
+                <div class="card-visual" id="cardVisual">
+                    <div class="card-chip"></div>
+                    <div class="card-number-display" id="cardNumberDisplay">**** **** **** ****</div>
+                    <div class="card-info">
+                        <div>
+                            <div style="font-size: 0.75rem; opacity: 0.8;">CARD HOLDER</div>
+                            <div class="card-holder" id="cardHolderDisplay">YOUR NAME</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.75rem; opacity: 0.8;">VALID THRU</div>
+                            <div class="card-expiry" id="cardExpiryDisplay">MM/YY</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-form">
+                    <div class="form-group">
+                        <label for="cardNumber">
+                            <i data-lucide="hash" class="icon-sm"></i>
+                            Nomor Kartu
+                        </label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cardHolder">
+                            <i data-lucide="user" class="icon-sm"></i>
+                            Nama Pemegang Kartu
+                        </label>
+                        <input type="text" id="cardHolder" placeholder="Nama sesuai kartu" required>
+                    </div>
+                    <div class="card-row">
+                        <div class="form-group">
+                            <label for="cardExpiry">
+                                <i data-lucide="calendar" class="icon-sm"></i>
+                                Tanggal Kadaluarsa
+                            </label>
+                            <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardCvv">
+                                <i data-lucide="shield" class="icon-sm"></i>
+                                CVV
+                            </label>
+                            <input type="text" id="cardCvv" placeholder="123" maxlength="4" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bank Transfer Form -->
+            <div class="payment-form" id="banktransferForm">
+                <h4>
+                    <i data-lucide="building-2" class="icon"></i>
+                    Transfer Bank
+                </h4>
+                <p>Pilih bank untuk transfer:</p>
+                <div class="bank-options">
+                    <div class="bank-option" data-bank="bca">
+                        <i data-lucide="building-2" class="icon-lg" style="color: #0066cc;"></i>
+                        <div style="font-weight: 700; color: #0066cc; font-size: 1.125rem;">BCA</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Bank Central Asia</div>
+                    </div>
+                    <div class="bank-option" data-bank="mandiri">
+                        <i data-lucide="building-2" class="icon-lg" style="color: #ff6600;"></i>
+                        <div style="font-weight: 700; color: #ff6600; font-size: 1.125rem;">Mandiri</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Bank Mandiri</div>
+                    </div>
+                    <div class="bank-option" data-bank="bri">
+                        <i data-lucide="building-2" class="icon-lg" style="color: #0066cc;"></i>
+                        <div style="font-weight: 700; color: #0066cc; font-size: 1.125rem;">BRI</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Bank Rakyat Indonesia</div>
+                    </div>
+                    <div class="bank-option" data-bank="bni">
+                        <i data-lucide="building-2" class="icon-lg" style="color: #ff6600;"></i>
+                        <div style="font-weight: 700; color: #ff6600; font-size: 1.125rem;">BNI</div>
+                        <div style="font-size: 0.875rem; color: var(--gray-600);">Bank Negara Indonesia</div>
+                    </div>
+                </div>
+                <div id="bankDetails" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background: #dbeafe; border-radius: var(--border-radius); border: 1px solid var(--primary-color);">
+                    <div id="bankInfo"></div>
+                </div>
+            </div>
+
+            <!-- E-Wallet Form -->
+            <div class="payment-form" id="ewalletForm">
+                <h4>
+                    <i data-lucide="smartphone" class="icon"></i>
+                    E-Wallet
+                </h4>
+                <p>Pilih e-wallet:</p>
+                <div class="ewallet-options">
+                    <div class="ewallet-option" data-ewallet="gopay">
+                        <i data-lucide="smartphone" class="icon-lg" style="color: #00aa13;"></i>
+                        <div style="font-weight: 700; color: #00aa13; font-size: 1.125rem;">GoPay</div>
+                    </div>
+                    <div class="ewallet-option" data-ewallet="ovo">
+                        <i data-lucide="smartphone" class="icon-lg" style="color: #4c3494;"></i>
+                        <div style="font-weight: 700; color: #4c3494; font-size: 1.125rem;">OVO</div>
+                    </div>
+                    <div class="ewallet-option" data-ewallet="dana">
+                        <i data-lucide="smartphone" class="icon-lg" style="color: #118eea;"></i>
+                        <div style="font-weight: 700; color: #118eea; font-size: 1.125rem;">DANA</div>
+                    </div>
+                    <div class="ewallet-option" data-ewallet="shopeepay">
+                        <i data-lucide="smartphone" class="icon-lg" style="color: #ee4d2d;"></i>
+                        <div style="font-weight: 700; color: #ee4d2d; font-size: 1.125rem;">ShopeePay</div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 1.5rem;">
+                    <label for="phoneNumber">
+                        <i data-lucide="phone" class="icon-sm"></i>
+                        Nomor HP E-Wallet
+                    </label>
+                    <input type="tel" id="phoneNumber" placeholder="08xxxxxxxxxx" required>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="button" class="btn btn-secondary" onclick="goBackToBooking()">
+                    <i data-lucide="arrow-left" class="icon-sm"></i>
+                    Kembali
+                </button>
+                <button type="button" class="btn" id="processPaymentBtn" onclick="processPayment()" disabled>
+                    <i data-lucide="credit-card" class="icon-sm"></i>
+                    Bayar Sekarang
+                </button>
+            </div>
+        </section>
+
+        <div class="processing-overlay" id="processingOverlay">
+            <div class="processing-content">
+                <div class="spinner"></div>
+                <h3>Memproses Pembayaran...</h3>
+                <p>Mohon tunggu, jangan tutup halaman ini.</p>
+            </div>
+        </div>
+
+        <div class="confirmation" id="confirmation">
+            <h3>
+                <i data-lucide="check-circle" class="icon-lg"></i>
+                Pembayaran Berhasil!
+            </h3>
+            <p>Tiket bus Anda telah berhasil dipesan dan dibayar. Silakan simpan informasi berikut:</p>
+            <div class="ticket-info" id="ticketInfo">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        const busData = {
+            'jakarta-bandung': [
+                {
+                    name: 'Primajasa Executive',
+                    departure: '08:00',
+                    arrival: '11:00',
+                    duration: '3 jam',
+                    price: 75000,
+                    facilities: ['AC', 'WiFi', 'Toilet', 'Snack'],
+                    type: 'Executive',
+                    rating: '4.8',
+                    image: 'super.jpg',
+                    available: 28
+                },
+                {
+                    name: 'Pahala Kencana',
+                    departure: '14:00',
+                    arrival: '17:30',
+                    duration: '3.5 jam',
+                    price: 65000,
+                    facilities: ['AC', 'WiFi', 'Toilet'],
+                    type: 'Ekonomi',
+                    rating: '4.5',
+                    image: 'super.jpeg',
+                    available: 15
+                },
+                {
+                    name: 'Sinar Jaya',
+                    departure: '20:00',
+                    arrival: '23:30',
+                    duration: '3.5 jam',
+                    price: 70000,
+                    facilities: ['AC', 'WiFi', 'Selimut'],
+                    type: 'Bisnis',
+                    rating: '4.6',
+                    image: 'super.jpg',
+                    available: 22
+                }
+            ],
+            'jakarta-surabaya': [
+                {
+                    name: 'Rosalia Indah',
+                    departure: '19:00',
+                    arrival: '07:00',
+                    duration: '12 jam',
+                    price: 180000,
+                    facilities: ['AC', 'WiFi', 'Toilet', 'Makan', 'Selimut'],
+                    type: 'Executive',
+                    rating: '4.9',
+                    image: 'super.jpg',
+                    available: 18
+                },
+                {
+                    name: 'Gunung Harta',
+                    departure: '21:00',
+                    arrival: '09:30',
+                    duration: '12.5 jam',
+                    price: 165000,
+                    facilities: ['AC', 'WiFi', 'Toilet', 'Selimut'],
+                    type: 'Bisnis',
+                    rating: '4.7',
+                    image: 'super.jpg',
+                    available: 12
+                }
+            ],
+            'bandung-yogyakarta': [
+                {
+                    name: 'Harapan Jaya',
+                    departure: '18:00',
+                    arrival: '06:00',
+                    duration: '12 jam',
+                    price: 150000,
+                    facilities: ['AC', 'WiFi', 'Toilet', 'Makan'],
+                    type: 'Executive',
+                    rating: '4.8',
+                    image: 'super.jpg',
+                    available: 25
+                }
+            ]
+        };
+
+        let selectedBus = null;
+        let searchData = null;
+        let selectedSeats = [];
+        let currentStep = 1;
+        let selectedPaymentMethod = null;
+        let passengerData = [];
+        let qrisTimer = null;
+        let qrisTimeLeft = 900; // 15 minutes in seconds
+
+        // Set minimum date to today
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+
+        function updateStepIndicator(step) {
+            const steps = document.querySelectorAll('.step');
+            steps.forEach((stepEl, index) => {
+                stepEl.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    stepEl.classList.add('completed');
+                } else if (index + 1 === step) {
+                    stepEl.classList.add('active');
+                }
+            });
+            currentStep = step;
+        }
+
+        function getFacilityIcon(facility) {
+            const icons = {
+                'AC': 'snowflake',
+                'WiFi': 'wifi',
+                'Toilet': 'home',
+                'Snack': 'cookie',
+                'Makan': 'utensils',
+                'Selimut': 'bed',
+                'TV': 'tv',
+                'USB': 'usb'
+            };
+            return icons[facility] || 'check';
+        }
+
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const departure = document.getElementById('departure').value;
+            const destination = document.getElementById('destination').value;
+            const date = document.getElementById('date').value;
+            const passengers = document.getElementById('passengers').value;
+
+            if (departure === destination) {
+                alert('Kota asal dan tujuan tidak boleh sama!');
+                return;
+            }
+
+            searchData = { departure, destination, date, passengers };
+            searchBuses(departure, destination);
+            updateStepIndicator(2);
+        });
+
+        function searchBuses(departure, destination) {
+            const route = `${departure}-${destination}`;
+            const reverseRoute = `${destination}-${departure}`;
+            
+            let buses = busData[route] || busData[reverseRoute] || [];
+            
+            if (buses.length === 0) {
+                buses = [
+                    {
+                        name: 'Bus Ekonomi',
+                        departure: '09:00',
+                        arrival: '15:00',
+                        duration: '6 jam',
+                        price: 85000,
+                        facilities: ['AC', 'WiFi'],
+                        type: 'Ekonomi',
+                        rating: '4.3',
+                        image: 'super.jpg',
+                        available: 20
+                    },
+                    {
+                        name: 'Bus Executive',
+                        departure: '19:00',
+                        arrival: '05:00',
+                        duration: '10 jam',
+                        price: 120000,
+                        facilities: ['AC', 'WiFi', 'Toilet', 'Selimut'],
+                        type: 'Executive',
+                        rating: '4.6',
+                        image: 'super.jpg',
+                        available: 16
+                    }
+                ];
+            }
+
+            displayBuses(buses);
+        }
+
+        function displayBuses(buses) {
+            const resultsSection = document.getElementById('resultsSection');
+            const busResults = document.getElementById('busResults');
+            
+            busResults.innerHTML = '';
+            
+            buses.forEach((bus, index) => {
+                const busCard = document.createElement('div');
+                busCard.className = 'bus-card';
+                busCard.innerHTML = `
+                    <div class="bus-image-container">
+                        <img src="${bus.image}" alt="${bus.name}" class="bus-image">
+                        <div class="bus-type-badge">
+                            <i data-lucide="award" class="icon-sm"></i>
+                            ${bus.type}
+                        </div>
+                        <div class="bus-rating">
+                            <i data-lucide="star" class="icon-sm"></i>
+                            ${bus.rating}
+                        </div>
+                    </div>
+                    <div class="bus-content">
+                        <div class="bus-header">
+                            <div class="bus-name">
+                                <i data-lucide="bus" class="icon"></i>
+                                ${bus.name}
+                            </div>
+                            <div class="bus-price">Rp ${bus.price.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="bus-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="clock" class="icon-sm"></i>
+                                    Keberangkatan
+                                </div>
+                                <div class="detail-value">${bus.departure}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="clock" class="icon-sm"></i>
+                                    Tiba
+                                </div>
+                                <div class="detail-value">${bus.arrival}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="timer" class="icon-sm"></i>
+                                    Durasi
+                                </div>
+                                <div class="detail-value">${bus.duration}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="armchair" class="icon-sm"></i>
+                                    Tersedia
+                                </div>
+                                <div class="detail-value">${bus.available} kursi</div>
+                            </div>
+                        </div>
+                        <div class="facilities">
+                            ${bus.facilities.map(facility => `
+                                <span class="facility">
+                                    <i data-lucide="${getFacilityIcon(facility)}" class="icon-sm"></i>
+                                    ${facility}
+                                </span>
+                            `).join('')}
+                        </div>
+                        <div class="bus-actions">
+                            <div class="availability-info">
+                                <i data-lucide="check-circle" class="icon-sm"></i>
+                                ${bus.available} kursi tersedia
+                            </div>
+                            <button class="btn" onclick="selectBus(${index}, ${JSON.stringify(bus).replace(/"/g, '&quot;')})">
+                                <i data-lucide="ticket" class="icon-sm"></i>
+                                Pilih Bus
+                            </button>
+                        </div>
+                    </div>
+                `;
+                busResults.appendChild(busCard);
+            });
+            
+            // Re-initialize icons for new content
+            lucide.createIcons();
+            
+            resultsSection.style.display = 'block';
+            resultsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectBus(index, bus) {
+            selectedBus = bus;
+            showSeatSelection();
+            updateStepIndicator(3);
+        }
+
+        function showSeatSelection() {
+            const seatSelectionSection = document.getElementById('seatSelectionSection');
+            const selectedBusInfo = document.getElementById('selectedBusInfo');
+            
+            selectedBusInfo.innerHTML = `
+                <div class="bus-card">
+                    <div class="bus-image-container">
+                        <img src="${selectedBus.image}" alt="${selectedBus.name}" class="bus-image">
+                        <div class="bus-type-badge">
+                            <i data-lucide="award" class="icon-sm"></i>
+                            ${selectedBus.type}
+                        </div>
+                        <div class="bus-rating">
+                            <i data-lucide="star" class="icon-sm"></i>
+                            ${selectedBus.rating}
+                        </div>
+                    </div>
+                    <div class="bus-content">
+                        <div class="bus-header">
+                            <div class="bus-name">
+                                <i data-lucide="bus" class="icon"></i>
+                                ${selectedBus.name}
+                            </div>
+                            <div class="bus-price">Rp ${selectedBus.price.toLocaleString('id-ID')} per kursi</div>
+                        </div>
+                        <div class="bus-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="route" class="icon-sm"></i>
+                                    Rute
+                                </div>
+                                <div class="detail-value">${searchData.departure.charAt(0).toUpperCase() + searchData.departure.slice(1)} → ${searchData.destination.charAt(0).toUpperCase() + searchData.destination.slice(1)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="calendar" class="icon-sm"></i>
+                                    Tanggal
+                                </div>
+                                <div class="detail-value">${new Date(searchData.date).toLocaleDateString('id-ID')}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="clock" class="icon-sm"></i>
+                                    Waktu
+                                </div>
+                                <div class="detail-value">${selectedBus.departure} - ${selectedBus.arrival}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            generateSeats();
+            lucide.createIcons();
+            seatSelectionSection.style.display = 'block';
+            seatSelectionSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function generateSeats() {
+            const seatsGrid = document.getElementById('seatsGrid');
+            seatsGrid.innerHTML = '';
+            selectedSeats = [];
+            
+            for (let i = 1; i <= 36; i++) {
+                const seat = document.createElement('div');
+                seat.className = 'seat available';
+                seat.textContent = i;
+                seat.onclick = () => toggleSeat(i, seat);
+                
+                const random = Math.random();
+                if (random < 0.15) {
+                    seat.className = 'seat occupied';
+                    seat.onclick = null;
+                } else if (random < 0.25) {
+                    seat.className = 'seat reserved';
+                    seat.onclick = null;
+                }
+                
+                seatsGrid.appendChild(seat);
+            }
+            
+            updateSeatDisplay();
+        }
+
+        function toggleSeat(seatNumber, seatElement) {
+            if (seatElement.classList.contains('occupied') || seatElement.classList.contains('reserved')) {
+                return;
+            }
+            
+            if (seatElement.classList.contains('selected')) {
+                seatElement.classList.remove('selected');
+                seatElement.classList.add('available');
+                selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+            } else {
+                if (selectedSeats.length < parseInt(searchData.passengers)) {
+                    seatElement.classList.remove('available');
+                    seatElement.classList.add('selected');
+                    selectedSeats.push(seatNumber);
+                } else {
+                    alert(`Anda hanya dapat memilih ${searchData.passengers} kursi sesuai jumlah penumpang`);
+                }
+            }
+            
+            updateSeatDisplay();
+        }
+
+        function updateSeatDisplay() {
+            const selectedSeatsDisplay = document.getElementById('selectedSeatsDisplay');
+            const seatPriceInfo = document.getElementById('seatPriceInfo');
+            const proceedBtn = document.getElementById('proceedToBookingBtn');
+            
+            if (selectedSeats.length === 0) {
+                selectedSeatsDisplay.textContent = 'Silakan pilih kursi sesuai jumlah penumpang';
+                seatPriceInfo.textContent = '';
+                proceedBtn.disabled = true;
+            } else {
+                const totalPrice = selectedSeats.length * selectedBus.price;
+                selectedSeatsDisplay.innerHTML = `
+                    <strong>Kursi terpilih:</strong> ${selectedSeats.sort((a, b) => a - b).join(', ')}<br>
+                    <strong>Jumlah:</strong> ${selectedSeats.length}/${searchData.passengers} kursi
+                `;
+                seatPriceInfo.textContent = `Total Harga: Rp ${totalPrice.toLocaleString('id-ID')}`;
+                proceedBtn.disabled = selectedSeats.length !== parseInt(searchData.passengers);
+            }
+        }
+
+        function goBackToBusSelection() {
+            document.getElementById('seatSelectionSection').style.display = 'none';
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            updateStepIndicator(2);
+        }
+
+        function proceedToBooking() {
+            if (selectedSeats.length !== parseInt(searchData.passengers)) {
+                alert(`Silakan pilih ${searchData.passengers} kursi sesuai jumlah penumpang`);
+                return;
+            }
+            
+            showBookingForm();
+            updateStepIndicator(4);
+        }
+
+        function showBookingForm() {
+            const bookingSection = document.getElementById('bookingSection');
+            const finalBusInfo = document.getElementById('finalBusInfo');
+            const passengerForm = document.getElementById('passengerForm');
+            
+            const totalPrice = selectedSeats.length * selectedBus.price;
+            
+            finalBusInfo.innerHTML = `
+                <div class="bus-card">
+                    <div class="bus-image-container">
+                        <img src="${selectedBus.image}" alt="${selectedBus.name}" class="bus-image">
+                        <div class="bus-type-badge">
+                            <i data-lucide="award" class="icon-sm"></i>
+                            ${selectedBus.type}
+                        </div>
+                        <div class="bus-rating">
+                            <i data-lucide="star" class="icon-sm"></i>
+                            ${selectedBus.rating}
+                        </div>
+                    </div>
+                    <div class="bus-content">
+                        <div class="bus-header">
+                            <div class="bus-name">
+                                <i data-lucide="bus" class="icon"></i>
+                                ${selectedBus.name}
+                            </div>
+                            <div class="bus-price">Total: Rp ${totalPrice.toLocaleString('id-ID')}</div>
+                        </div>
+                        <div class="bus-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="route" class="icon-sm"></i>
+                                    Rute
+                                </div>
+                                <div class="detail-value">${searchData.departure.charAt(0).toUpperCase() + searchData.departure.slice(1)} → ${searchData.destination.charAt(0).toUpperCase() + searchData.destination.slice(1)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="calendar" class="icon-sm"></i>
+                                    Tanggal
+                                </div>
+                                <div class="detail-value">${new Date(searchData.date).toLocaleDateString('id-ID')}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="clock" class="icon-sm"></i>
+                                    Waktu
+                                </div>
+                                <div class="detail-value">${selectedBus.departure} - ${selectedBus.arrival}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <i data-lucide="armchair" class="icon-sm"></i>
+                                    Kursi
+                                </div>
+                                <div class="detail-value">${selectedSeats.sort((a, b) => a - b).join(', ')}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            passengerForm.innerHTML = '';
+            selectedSeats.forEach((seatNumber, index) => {
+                const passengerDiv = document.createElement('div');
+                passengerDiv.innerHTML = `
+                    <h4>
+                        <i data-lucide="user" class="icon-sm"></i>
+                        Penumpang ${index + 1} (Kursi ${seatNumber})
+                    </h4>
+                    <div class="form-group">
+                        <label for="name${index + 1}">
+                            <i data-lucide="user" class="icon-sm"></i>
+                            Nama Lengkap
+                        </label>
+                        <input type="text" id="name${index + 1}" required placeholder="Nama lengkap penumpang ${index + 1}">
+                    </div>
+                    <div class="form-group">
+                        <label for="id${index + 1}">
+                            <i data-lucide="credit-card" class="icon-sm"></i>
+                            No. KTP/Identitas
+                        </label>
+                        <input type="text" id="id${index + 1}" required placeholder="Nomor identitas">
+                    </div>
+                `;
+                passengerForm.appendChild(passengerDiv);
+            });
+            
+            document.getElementById('seatSelectionSection').style.display = 'none';
+            bookingSection.style.display = 'block';
+            lucide.createIcons();
+            bookingSection.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function goBackToSeatSelection() {
+            document.getElementById('bookingSection').style.display = 'none';
+            document.getElementById('seatSelectionSection').style.display = 'block';
+            document.getElementById('seatSelectionSection').scrollIntoView({ behavior: 'smooth' });
+            updateStepIndicator(3);
+        }
+
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect passenger data
+            passengerData = [];
+            selectedSeats.forEach((seatNumber, index) => {
+                passengerData.push({
+                    seat: seatNumber,
+                    name: document.getElementById(`name${index + 1}`).value,
+                    id: document.getElementById(`id${index + 1}`).value
+                });
+            });
+            
+            showPaymentSection();
+            updateStepIndicator(5);
+        });
+
+        function showPaymentSection() {
+            const paymentSection = document.getElementById('paymentSection');
+            const paymentSummaryContent = document.getElementById('paymentSummaryContent');
+            
+            const subtotal = selectedSeats.length * selectedBus.price;
+            const adminFee = 5000;
+            const total = subtotal + adminFee;
+            
+            paymentSummaryContent.innerHTML = `
+                <div class="summary-row">
+                    <span>Tiket Bus (${selectedSeats.length}x)</span>
+                    <span>Rp ${subtotal.toLocaleString('id-ID')}</span>
+                </div>
+                <div class="summary-row">
+                    <span>Biaya Admin</span>
+                    <span>Rp ${adminFee.toLocaleString('id-ID')}</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total Pembayaran</span>
+                    <span>Rp ${total.toLocaleString('id-ID')}</span>
+                </div>
+            `;
+            
+            document.getElementById('bookingSection').style.display = 'none';
+            paymentSection.style.display = 'block';
+            paymentSection.scrollIntoView({ behavior: 'smooth' });
+            
+            initializePaymentMethods();
+        }
+
+        function initializePaymentMethods() {
+            const paymentMethods = document.querySelectorAll('.payment-method');
+            const paymentForms = document.querySelectorAll('.payment-form');
+            const processPaymentBtn = document.getElementById('processPaymentBtn');
+            
+            paymentMethods.forEach(method => {
+                method.addEventListener('click', function() {
+                    // Remove active class from all methods
+                    paymentMethods.forEach(m => m.classList.remove('selected'));
+                    paymentForms.forEach(f => f.classList.remove('active'));
+                    
+                    // Add active class to selected method
+                    this.classList.add('selected');
+                    selectedPaymentMethod = this.dataset.method;
+                    
+                    // Show corresponding form
+                    const formId = selectedPaymentMethod.replace('-', '') + 'Form';
+                    document.getElementById(formId).classList.add('active');
+                    
+                    // Initialize QRIS if selected
+                    if (selectedPaymentMethod === 'qris') {
+                        initializeQRIS();
+                    }
+                    
+                    processPaymentBtn.disabled = false;
+                });
+            });
+            
+            // Initialize card form interactions
+            initializeCardForm();
+            initializeBankTransfer();
+            initializeEWallet();
+        }
+
+        function initializeQRIS() {
+            const subtotal = selectedSeats.length * selectedBus.price;
+            const adminFee = 5000;
+            const total = subtotal + adminFee;
+            
+            // Update QRIS amount display
+            document.getElementById('qrisAmount').innerHTML = `
+                <i data-lucide="banknote" class="icon"></i>
+                Total Pembayaran: Rp ${total.toLocaleString('id-ID')}
+            `;
+            
+            // Generate QR Code (in real implementation, this would be generated by payment gateway)
+            const qrisData = `00020101021226580014ID.CO.QRIS.WWW0215ID20232024567890303UMI51440014ID.CO.QRIS.WWW0215ID20232024567890303UMI5204481253033605802ID5914TEKNOBUS ONLINE6007JAKARTA61051234062070703A0163044B2A`;
+            
+            // Update QR code image (in real implementation, use QR code library)
+            document.getElementById('qrisImage').src = `Qris.png`;
+            
+            // Start countdown timer
+            startQRISTimer();
+            
+            // Re-initialize icons
+            lucide.createIcons();
+        }
+
+        function startQRISTimer() {
+            qrisTimeLeft = 900; // 15 minutes
+            
+            if (qrisTimer) {
+                clearInterval(qrisTimer);
+            }
+            
+            qrisTimer = setInterval(() => {
+                qrisTimeLeft--;
+                
+                const minutes = Math.floor(qrisTimeLeft / 60);
+                const seconds = qrisTimeLeft % 60;
+                
+                document.getElementById('timerDisplay').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (qrisTimeLeft <= 0) {
+                    clearInterval(qrisTimer);
+                    alert('Waktu pembayaran QRIS telah habis. Silakan pilih metode pembayaran lain atau refresh halaman.');
+                    document.getElementById('qrisTimer').innerHTML = `
+                        <i data-lucide="x-circle" class="icon-sm"></i>
+                        Waktu pembayaran habis
+                    `;
+                    document.getElementById('processPaymentBtn').disabled = true;
+                }
+            }, 1000);
+        }
+
+        function initializeCardForm() {
+            const cardNumber = document.getElementById('cardNumber');
+            const cardHolder = document.getElementById('cardHolder');
+            const cardExpiry = document.getElementById('cardExpiry');
+            const cardCvv = document.getElementById('cardCvv');
+            
+            const cardNumberDisplay = document.getElementById('cardNumberDisplay');
+            const cardHolderDisplay = document.getElementById('cardHolderDisplay');
+            const cardExpiryDisplay = document.getElementById('cardExpiryDisplay');
+            
+            cardNumber.addEventListener('input', function() {
+                let value = this.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+                let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+                this.value = formattedValue;
+                
+                if (value.length > 0) {
+                    cardNumberDisplay.textContent = formattedValue.padEnd(19, '*').replace(/\*/g, '*');
+                } else {
+                    cardNumberDisplay.textContent = '**** **** **** ****';
+                }
+            });
+            
+            cardHolder.addEventListener('input', function() {
+                cardHolderDisplay.textContent = this.value.toUpperCase() || 'YOUR NAME';
+            });
+            
+            cardExpiry.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                }
+                this.value = value;
+                cardExpiryDisplay.textContent = value || 'MM/YY';
+            });
+            
+            cardCvv.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '');
+            });
+        }
+
+        function initializeBankTransfer() {
+            const bankOptions = document.querySelectorAll('.bank-option');
+            const bankDetails = document.getElementById('bankDetails');
+            const bankInfo = document.getElementById('bankInfo');
+            
+            const bankData = {
+                bca: {
+                    name: 'Bank Central Asia',
+                    account: '1234567890',
+                    holder: 'PT TeknoBus Indonesia'
+                },
+                mandiri: {
+                    name: 'Bank Mandiri',
+                    account: '0987654321',
+                    holder: 'PT TeknoBus Indonesia'
+                },
+                bri: {
+                    name: 'Bank Rakyat Indonesia',
+                    account: '5678901234',
+                    holder: 'PT TeknoBus Indonesia'
+                },
+                bni: {
+                    name: 'Bank Negara Indonesia',
+                    account: '4321098765',
+                    holder: 'PT TeknoBus Indonesia'
+                }
+            };
+            
+            bankOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    bankOptions.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    const bank = bankData[this.dataset.bank];
+                    const subtotal = selectedSeats.length * selectedBus.price;
+                    const adminFee = 5000;
+                    const total = subtotal + adminFee;
+                    
+                    bankInfo.innerHTML = `
+                        <h5>
+                            <i data-lucide="clipboard-list" class="icon-sm"></i>
+                            Detail Transfer
+                        </h5>
+                        <p><strong>Bank:</strong> ${bank.name}</p>
+                        <p><strong>No. Rekening:</strong> ${bank.account}</p>
+                        <p><strong>Atas Nama:</strong> ${bank.holder}</p>
+                        <p><strong>Jumlah Transfer:</strong> <span style="color: var(--danger-color); font-weight: bold;">Rp ${total.toLocaleString('id-ID')}</span></p>
+                        <hr>
+                        <p><small>
+                            <i data-lucide="alert-triangle" class="icon-sm"></i>
+                            <strong>Penting:</strong> Transfer sesuai jumlah yang tertera. Setelah transfer, tiket akan otomatis terkirim ke email Anda dalam 5-10 menit.
+                        </small></p>
+                    `;
+                    
+                    bankDetails.style.display = 'block';
+                    lucide.createIcons();
+                });
+            });
+        }
+
+        function initializeEWallet() {
+            const ewalletOptions = document.querySelectorAll('.ewallet-option');
+            
+            ewalletOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    ewalletOptions.forEach(o => o.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        function goBackToBooking() {
+            document.getElementById('paymentSection').style.display = 'none';
+            document.getElementById('bookingSection').style.display = 'block';
+            document.getElementById('bookingSection').scrollIntoView({ behavior: 'smooth' });
+            updateStepIndicator(4);
+            
+            // Clear QRIS timer if active
+            if (qrisTimer) {
+                clearInterval(qrisTimer);
+                qrisTimer = null;
+            }
+        }
+
+        function processPayment() {
+            if (!selectedPaymentMethod) {
+                alert('Silakan pilih metode pembayaran');
+                return;
+            }
+            
+            // Validate payment form based on selected method
+            if (selectedPaymentMethod === 'qris') {
+                if (qrisTimeLeft <= 0) {
+                    alert('Waktu pembayaran QRIS telah habis. Silakan refresh halaman atau pilih metode lain.');
+                    return;
+                }
+                // For QRIS, we simulate immediate payment confirmation
+                // In real implementation, this would check payment status from payment gateway
+            } else if (selectedPaymentMethod === 'credit-card') {
+                const cardNumber = document.getElementById('cardNumber').value;
+                const cardHolder = document.getElementById('cardHolder').value;
+                const cardExpiry = document.getElementById('cardExpiry').value;
+                const cardCvv = document.getElementById('cardCvv').value;
+                
+                if (!cardNumber || !cardHolder || !cardExpiry || !cardCvv) {
+                    alert('Silakan lengkapi semua data kartu');
+                    return;
+                }
+                
+                if (cardNumber.replace(/\s/g, '').length < 16) {
+                    alert('Nomor kartu tidak valid');
+                    return;
+                }
+                
+                if (cardExpiry.length < 5) {
+                    alert('Tanggal kadaluarsa tidak valid');
+                    return;
+                }
+                
+                if (cardCvv.length < 3) {
+                    alert('CVV tidak valid');
+                    return;
+                }
+            } else if (selectedPaymentMethod === 'bank-transfer') {
+                const selectedBank = document.querySelector('.bank-option.selected');
+                if (!selectedBank) {
+                    alert('Silakan pilih bank untuk transfer');
+                    return;
+                }
+            } else if (selectedPaymentMethod === 'ewallet') {
+                const selectedEwallet = document.querySelector('.ewallet-option.selected');
+                const phoneNumber = document.getElementById('phoneNumber').value;
+                
+                if (!selectedEwallet) {
+                    alert('Silakan pilih e-wallet');
+                    return;
+                }
+                
+                if (!phoneNumber) {
+                    alert('Silakan masukkan nomor HP e-wallet');
+                    return;
+                }
+            }
+            
+            // Show processing overlay
+            document.getElementById('processingOverlay').style.display = 'flex';
+            
+            // Clear QRIS timer if active
+            if (qrisTimer) {
+                clearInterval(qrisTimer);
+                qrisTimer = null;
+            }
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                document.getElementById('processingOverlay').style.display = 'none';
+                completePayment();
+            }, 3000);
+        }
+
+        function completePayment() {
+            const bookingCode = 'TB' + Date.now().toString().slice(-8);
+            const subtotal = selectedSeats.length * selectedBus.price;
+            const adminFee = 5000;
+            const totalPrice = subtotal + adminFee;
+            
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            
+            showConfirmation(bookingCode, totalPrice, passengerData, phone, email);
+            updateStepIndicator(6);
+        }
+
+        function showConfirmation(bookingCode, totalPrice, passengers, phone, email) {
+            const confirmation = document.getElementById('confirmation');
+            const ticketInfo = document.getElementById('ticketInfo');
+            
+            const paymentMethodNames = {
+                'qris': 'QRIS',
+                'credit-card': 'Kartu Kredit/Debit',
+                'bank-transfer': 'Transfer Bank',
+                'ewallet': 'E-Wallet'
+            };
+            
+            ticketInfo.innerHTML = `
+                <h4>
+                    <i data-lucide="clipboard-list" class="icon"></i>
+                    Informasi Tiket
+                </h4>
+                <p><strong>Kode Booking:</strong> ${bookingCode}</p>
+                <p><strong>Status Pembayaran:</strong> <span style="color: var(--success-color); font-weight: bold;">
+                    <i data-lucide="check-circle" class="icon-sm"></i>
+                    LUNAS
+                </span></p>
+                <p><strong>Metode Pembayaran:</strong> ${paymentMethodNames[selectedPaymentMethod]}</p>
+                <p><strong>Bus:</strong> ${selectedBus.name} (${selectedBus.type})</p>
+                <p><strong>Rating:</strong> 
+                    <i data-lucide="star" class="icon-sm"></i>
+                    ${selectedBus.rating}
+                </p>
+                <p><strong>Rute:</strong> ${searchData.departure.charAt(0).toUpperCase() + searchData.departure.slice(1)} → ${searchData.destination.charAt(0).toUpperCase() + searchData.destination.slice(1)}</p>
+                <p><strong>Tanggal:</strong> ${new Date(searchData.date).toLocaleDateString('id-ID')}</p>
+                <p><strong>Waktu:</strong> ${selectedBus.departure} - ${selectedBus.arrival}</p>
+                <p><strong>Jumlah Penumpang:</strong> ${selectedSeats.length} orang</p>
+                <p><strong>Kursi:</strong> ${selectedSeats.sort((a, b) => a - b).join(', ')}</p>
+                <p><strong>Total Pembayaran:</strong> Rp ${totalPrice.toLocaleString('id-ID')}</p>
+                <p><strong>Kontak:</strong> ${phone} | ${email}</p>
+                <hr>
+                <h5>
+                    <i data-lucide="users" class="icon-sm"></i>
+                    Daftar Penumpang:
+                </h5>
+                ${passengers.map((p, i) => `<p><strong>Kursi ${p.seat}:</strong> ${p.name} (${p.id})</p>`).join('')}
+                <hr>
+                <p><small>
+                    <i data-lucide="alert-triangle" class="icon-sm"></i>
+                    <strong>Penting:</strong> Silakan datang 30 menit sebelum keberangkatan dengan membawa identitas asli. Tunjukkan kode booking ini kepada petugas. E-tiket telah dikirim ke email Anda.
+                </small></p>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <button class="btn" onclick="window.print()">
+                        <i data-lucide="printer" class="icon-sm"></i>
+                        Cetak Tiket
+                    </button>
+                    <button class="btn btn-secondary" onclick="location.reload()" style="margin-left: 1rem;">
+                        <i data-lucide="refresh-cw" class="icon-sm"></i>
+                        Pesan Lagi
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('paymentSection').style.display = 'none';
+            confirmation.style.display = 'block';
+            lucide.createIcons();
+            confirmation.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
